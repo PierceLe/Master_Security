@@ -10,19 +10,13 @@ Prisma docs also looks so much better in comparison
 or use SQLite, if you're not into fancy ORMs (but be mindful of Injection attacks :) )
 '''
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Table
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from typing import Dict
 
 # data models
 class Base(DeclarativeBase):
     pass
-
-class Association(Base):
-    __tablename__ = 'association'
-    left_user_id = Column(String, ForeignKey('user.username'), primary_key=True)
-    right_user_id = Column(String, ForeignKey('user.username'), primary_key=True)
-    status = Column(String)
 
 # model to store user information
 class User(Base):
@@ -33,39 +27,16 @@ class User(Base):
     # and I want this column to be my primary key
     # then accessing john.username -> will give me some data of type string
     # in other words we've mapped the username Python object property to an SQL column of type String 
-    username = Column(String, primary_key=True)
-    hash = Column(String)
-    salt = Column(String)
+    username: Mapped[str] = mapped_column(String, primary_key=True)
+    password: Mapped[str] = mapped_column(String)
+    
 
-
-    associated_users = relationship(
-        "User",
-        secondary="association",
-        primaryjoin=username == Association.left_user_id,
-        secondaryjoin=username == Association.right_user_id,
-        backref="associations"
-    )
-
-class Message(Base):
-    __tablename__ = "message"
-    id = Column(String, primary_key=True)
-    room_id = Column(String)
-    text = Column(String)
-        
 # stateful counter used to generate the room id
 class Counter():
     def __init__(self):
         self.counter = 0
     
     def get(self):
-        self.counter += 1
-        return self.counter
-    
-class MessageCounter():
-    def __init__(self):
-        self.counter = 0
-
-    def get_counter(self):
         self.counter += 1
         return self.counter
 
