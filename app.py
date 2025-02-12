@@ -24,15 +24,18 @@ socketio = SocketIO(app)
 # don't remove this!!
 import socket_routes
 
+
 # index page
 @app.route("/")
 def index():
     return render_template("index.jinja")
 
+
 # login page
 @app.route("/login")
-def login():    
+def login():
     return render_template("login.jinja")
+
 
 # handles a post request when the user clicks the log in button
 @app.route("/login/user", methods=["POST"])
@@ -43,7 +46,7 @@ def login_user():
     username = request.json.get("username")
     password = request.json.get("password")
 
-    user =  db.get_user(username)
+    user = db.get_user(username)
     if user is None:
         return "Error: User does not exist!"
 
@@ -52,10 +55,12 @@ def login_user():
 
     return url_for('home', username=request.json.get("username"))
 
+
 # handles a get request to the signup page
 @app.route("/signup")
 def signup():
     return render_template("signup.jinja")
+
 
 # handles a post request when the user clicks the signup button
 @app.route("/signup/user", methods=["POST"])
@@ -70,10 +75,12 @@ def signup_user():
         return url_for('home', username=username)
     return "Error: User already exists!"
 
+
 # handler when a "404" error happens
 @app.errorhandler(404)
 def page_not_found(_):
     return render_template('404.jinja'), 404
+
 
 # home page, where the messaging app is
 @app.route("/home")
@@ -83,6 +90,5 @@ def home():
     return render_template("home.jinja", username=request.args.get("username"))
 
 
-
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, allow_unsafe_werkzeug=True)

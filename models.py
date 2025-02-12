@@ -14,14 +14,16 @@ from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from typing import Dict
 
+
 # data models
 class Base(DeclarativeBase):
     pass
 
+
 # model to store user information
 class User(Base):
     __tablename__ = "user"
-    
+
     # looks complicated but basically means
     # I want a username column of type string,
     # and I want this column to be my primary key
@@ -29,16 +31,17 @@ class User(Base):
     # in other words we've mapped the username Python object property to an SQL column of type String 
     username: Mapped[str] = mapped_column(String, primary_key=True)
     password: Mapped[str] = mapped_column(String)
-    
+
 
 # stateful counter used to generate the room id
 class Counter():
     def __init__(self):
         self.counter = 0
-    
+
     def get(self):
         self.counter += 1
         return self.counter
+
 
 # Room class, used to keep track of which username is in which room
 class Room():
@@ -54,8 +57,8 @@ class Room():
         self.dict[sender] = room_id
         self.dict[receiver] = room_id
         return room_id
-    
-    def join_room(self,  sender: str, room_id: int) -> int:
+
+    def join_room(self, sender: str, room_id: int) -> int:
         self.dict[sender] = room_id
 
     def leave_room(self, user):
@@ -68,4 +71,3 @@ class Room():
         if user not in self.dict.keys():
             return None
         return self.dict[user]
-    
