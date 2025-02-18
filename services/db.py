@@ -4,13 +4,12 @@ database file, containing all the logic to interface with the sql database
 '''
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from models import *
+from models.models import *
 
 from pathlib import Path
 
 # creates the database directory
-Path("database") \
+Path("../database") \
     .mkdir(exist_ok=True)
 
 # "database/main.db" specifies the database file

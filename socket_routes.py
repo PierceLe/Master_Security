@@ -14,7 +14,7 @@ except ImportError:
 
 from models import Room
 
-import db
+from services import db
 
 room = Room()
 

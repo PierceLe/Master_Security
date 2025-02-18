@@ -6,7 +6,7 @@ the socket event handlers are inside of socket_routes.py
 
 from flask import Flask, render_template, request, abort, url_for
 from flask_socketio import SocketIO
-import db
+from services import db
 import secrets
 
 # import logging
@@ -22,7 +22,6 @@ app.config['SECRET_KEY'] = secrets.token_hex()
 socketio = SocketIO(app)
 
 # don't remove this!!
-import socket_routes
 
 
 # index page
