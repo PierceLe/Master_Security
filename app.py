@@ -7,6 +7,8 @@ the socket event handlers are inside of socket_routes.py
 from flask import Flask, render_template, request, abort, url_for
 from flask_socketio import SocketIO
 from services import db
+from routes.auth import auth
+from routes.users import user
 import secrets
 
 # import logging
@@ -16,6 +18,8 @@ import secrets
 # log.setLevel(logging.ERROR)
 
 app = Flask(__name__)
+app.register_blueprint(user)
+app.register_blueprint(auth)
 
 # secret key used to sign the session cookie
 app.config['SECRET_KEY'] = secrets.token_hex()
