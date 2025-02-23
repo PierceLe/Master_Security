@@ -12,7 +12,7 @@ try:
 except ImportError:
     from app import socketio
 
-from models import Room
+from models.models import Room
 
 from services import db
 
