@@ -18,7 +18,7 @@ def get_my_info():
     }}, 200
 
 
-@user.route("/api/users/<username>", methods=["GET"])
+@user.route("/<username>", methods=["GET"])
 @jwt_required()
 def get_user_by_username(username):
     user_id = request.user_id
@@ -57,7 +57,7 @@ def get_user_by_username(username):
     }
 
 
-@user.route('/api/users/friend')
+@user.route('/users=/friend')
 @jwt_required()
 def get_friend():
     action = request.args.get("action")
@@ -73,7 +73,7 @@ def get_friend():
     return {"status_code": 200, "data": friend_list}, 200
 
 
-@user.route("/api/users/friend", methods = ["POST"])
+@user.route("/friend", methods = ["POST"])
 @jwt_required()
 def add_friend():
     action = request.json.get("action")

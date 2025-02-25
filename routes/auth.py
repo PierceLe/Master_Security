@@ -13,8 +13,8 @@ from services import user_service
 
 auth = Blueprint('auth', __name__, template_folder='routes')
 
-UPLOAD_FOLDER = "static/images/avatars"
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+UPLOAD_FOLDER_AVATAR = "static/images/avatars"
+ALLOWED_EXTENSIONS_AVATAR = {"png", "jpg", "jpeg", "gif"}
 
 
 def allowed_file(filename):
@@ -55,18 +55,18 @@ def login_user():
 # handles a post request when the user clicks the signup button
 @auth.route("/api/auth/signup", methods=["POST"])
 def signup_api():
-    username = request.json.get("username")
-    fullname = request.json.get("fullname")
-    hashed_password = request.json.get("password")
-    salt = request.json.get("salt")
-    public_key = request.json.get("pb_key")
+    username = request.form.get("username")
+    fullname = request.form.get("fullname")
+    hashed_password = request.form.get("password")
+    salt = request.form.get("salt")
+    public_key = request.form.get("pb_key")
     avatar = None
 
     if "avatar" in request.files:
         file = request.files["avatar"]
         if file and allowed_file(file.filename):
-            filename = secure_filename(username + "_" + file.filename)
-            file_path = os.path.join(UPLOAD_FOLDER, filename)
+            filename = secure_filename(f"{username}_{file.filename}")
+            file_path = os.path.join(UPLOAD_FOLDER_AVATAR, filename)
             file.save(file_path)
             avatar = file_path
 
@@ -81,5 +81,6 @@ def signup_api():
             public_key=public_key
         )
         access_token = create_access_token(identity=user_id, expires_delta=ACCESS_EXPIRES)
-        return {"status_code": 200, "data": {"username": username, "token": access_token}}, 200
-    return {"status_code": 400, "error": "user already exists!"}, 400
+        return jsonify({"status_code": 200, "data": {"username": username, "token": access_token}}), 200
+
+    return jsonify({"status_code": 400, "error": "user already exists!"}), 400
