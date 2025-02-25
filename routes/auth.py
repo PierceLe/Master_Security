@@ -14,11 +14,11 @@ from services import user_service
 auth = Blueprint('auth', __name__, template_folder='routes')
 
 UPLOAD_FOLDER_AVATAR = "static/images/avatars"
-ALLOWED_EXTENSIONS_AVATAR = {"png", "jpg", "jpeg", "gif"}
+ALLOWED_EXTENSIONS_AVATAR = {"png", "jpg", "jpeg", "gif", "svg"}
 
 
 def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS_AVATAR
 
 
 ACCESS_EXPIRES = timedelta(days=30)
@@ -60,7 +60,7 @@ def signup_api():
     hashed_password = request.form.get("password")
     salt = request.form.get("salt")
     public_key = request.form.get("pb_key")
-    avatar = None
+    avatar = UPLOAD_FOLDER_AVATAR + "/" + "default.svg"
 
     if "avatar" in request.files:
         file = request.files["avatar"]

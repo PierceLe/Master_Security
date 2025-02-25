@@ -5,6 +5,7 @@ the socket event handlers are inside of socket_routes.py
 '''
 
 from flask import Flask, render_template, request, abort, url_for
+from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
 from services import db
 from routes.auth import auth
@@ -22,8 +23,12 @@ app.register_blueprint(user)
 app.register_blueprint(auth)
 
 # secret key used to sign the session cookie
+app.config['JWT_SECRET_KEY'] = "minh"
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['SECRET_KEY'] = secrets.token_hex()
 socketio = SocketIO(app)
+
+jwtManager = JWTManager(app)
 
 # don't remove this!!
 
